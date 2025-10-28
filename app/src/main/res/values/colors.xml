@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#2196F3</color>
+    <color name="primary_dark">#1976D2</color>
+    <color name="accent">#FF4081</color>
+    <color name="fps_good">#4CAF50</color>
+    <color name="fps_medium">#FF9800</color>
+    <color name="fps_poor">#F44336</color>
+    <color name="overlay_background">#80000000</color>
+</resources>

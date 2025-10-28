@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FPS Meter</string>
+    <string name="overlay_permission_required">Overlay permission is required to display FPS over other apps</string>
+    <string name="fps_monitoring_active">FPS monitoring is active</string>
+    <string name="fps_monitoring_stopped">FPS monitoring stopped</string>
+</resources>

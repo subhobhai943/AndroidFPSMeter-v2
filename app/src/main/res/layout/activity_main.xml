@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@android:drawable/ic_dialog_info"
+        android:layout_marginBottom="32dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Android FPS Meter"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Initializing..."
+        android:textSize="16sp"
+        android:layout_marginBottom="32dp"
+        android:textAlignment="center"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/toggle_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start FPS Meter"
+        android:textSize="16sp"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="12dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="This app displays real-time FPS over other applications like games (BGMI, PUBG, etc.)"
+        android:textSize="14sp"
+        android:layout_marginTop="32dp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:alpha="0.7" />
+
+</LinearLayout>
