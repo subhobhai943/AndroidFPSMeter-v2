@@ -30,7 +30,6 @@
         <service
             android:name=".FPSMeterService"
             android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="specialUse" />
+            android:exported="false" />
     </application>
 </manifest>
