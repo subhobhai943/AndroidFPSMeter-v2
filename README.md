@@ -40,7 +40,7 @@ Android FPS Meter overlays the real-time frame rate (FPS) on any Android applica
 
 ## Documentation Site
 
-Check the [lightweight documentation site](docs-site/) for a guided tour of features, API, and troubleshooting.
+Check the [lightweight documentation site](https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/20cba9dc2da530ac66b5795068021100/01a96ab8-0d7c-4e04-bcd8-3d4a1a586018/index.html?utm_source=perplexity/) for a guided tour of features, API, and troubleshooting.
 
 ---
 
