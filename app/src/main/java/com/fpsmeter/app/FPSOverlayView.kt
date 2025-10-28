@@ -10,6 +10,7 @@ import android.view.Choreographer
 import android.widget.LinearLayout
 import android.widget.TextView
 import java.text.DecimalFormat
+import android.util.Log
 
 class FPSOverlayView @JvmOverloads constructor(
     context: Context,
@@ -25,90 +26,132 @@ class FPSOverlayView @JvmOverloads constructor(
     private var lastFrameTime = 0L
     private var fps = 0.0
     private val fpsFormat = DecimalFormat("0.0")
+    private var isMonitoring = false
     
-    // FPS calculation variables
     private val frameTimes = mutableListOf<Long>()
-    private val maxFrameHistory = 60 // Keep last 60 frames for better accuracy
+    private val maxFrameHistory = 60
+    
+    companion object {
+        private const val TAG = "FPSMeter_OverlayView"
+    }
     
     init {
-        orientation = VERTICAL
-        setBackgroundColor(Color.parseColor("#80000000")) // Semi-transparent black
-        setPadding(16, 8, 16, 8)
-        
-        // Create FPS text view
-        fpsTextView = TextView(context).apply {
-            text = "FPS: --"
-            setTextColor(Color.WHITE)
-            textSize = 14f
-            typeface = Typeface.DEFAULT_BOLD
+        try {
+            orientation = VERTICAL
+            setBackgroundColor(Color.parseColor("#CC000000"))
+            setPadding(12, 6, 12, 6)
+            
+            fpsTextView = TextView(context).apply {
+                text = "FPS: --"
+                setTextColor(Color.WHITE)
+                textSize = 12f
+                typeface = Typeface.DEFAULT_BOLD
+                setShadowLayer(2f, 1f, 1f, Color.BLACK)
+            }
+            
+            addView(fpsTextView)
+            Log.d(TAG, "FPSOverlayView initialized successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error initializing FPSOverlayView", e)
+            throw e
         }
-        
-        addView(fpsTextView)
     }
 
     fun startFPSMonitoring() {
-        choreographer.postFrameCallback(this)
-        lastFrameTime = System.nanoTime()
+        Log.d(TAG, "Starting FPS monitoring")
+        
+        try {
+            if (isMonitoring) return
+            choreographer.postFrameCallback(this)
+            lastFrameTime = System.nanoTime()
+            isMonitoring = true
+            frameCount = 0
+            frameTimes.clear()
+            handler.post {
+                fpsTextView.text = "FPS: Starting..."
+                fpsTextView.setTextColor(Color.YELLOW)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error starting FPS monitoring", e)
+            isMonitoring = false
+        }
     }
 
     fun stopFPSMonitoring() {
-        choreographer.removeFrameCallback(this)
-        frameTimes.clear()
+        Log.d(TAG, "Stopping FPS monitoring")
+        
+        try {
+            if (!isMonitoring) return
+            choreographer.removeFrameCallback(this)
+            isMonitoring = false
+            frameTimes.clear()
+            handler.post {
+                fpsTextView.text = "FPS: Stopped"
+                fpsTextView.setTextColor(Color.GRAY)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error stopping FPS monitoring", e)
+        }
     }
 
     override fun doFrame(frameTimeNanos: Long) {
-        frameCount++
-        
-        // Add current frame time to history
-        frameTimes.add(frameTimeNanos)
-        
-        // Keep only recent frames
-        if (frameTimes.size > maxFrameHistory) {
-            frameTimes.removeAt(0)
+        try {
+            if (!isMonitoring) return
+            frameCount++
+            frameTimes.add(frameTimeNanos)
+            if (frameTimes.size > maxFrameHistory) frameTimes.removeAt(0)
+            if (frameCount % 30 == 0 || frameTimeNanos - lastFrameTime >= 1_000_000_000L) {
+                calculateFPS()
+                updateFPSDisplay()
+                lastFrameTime = frameTimeNanos
+            }
+            if (isMonitoring) choreographer.postFrameCallback(this)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error in doFrame", e)
+            handler.post {
+                fpsTextView.text = "FPS: Error"
+                fpsTextView.setTextColor(Color.RED)
+            }
         }
-        
-        // Calculate FPS every 30 frames or every second
-        if (frameCount % 30 == 0 || frameTimeNanos - lastFrameTime >= 1_000_000_000L) {
-            calculateFPS()
-            updateFPSDisplay()
-            lastFrameTime = frameTimeNanos
-        }
-        
-        // Schedule next frame callback
-        choreographer.postFrameCallback(this)
     }
 
     private fun calculateFPS() {
-        if (frameTimes.size < 2) {
+        try {
+            if (frameTimes.size < 2) { fps = 0.0; return }
+            val startTime = frameTimes.first()
+            val endTime = frameTimes.last()
+            val timeDifference = endTime - startTime
+            fps = if (timeDifference > 0) {
+                ((frameTimes.size - 1) * 1_000_000_000.0 / timeDifference).coerceIn(0.0, 240.0)
+            } else 0.0
+            if (frameCount % 60 == 0) Log.d(TAG, "FPS calculated: $fps")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error calculating FPS", e)
             fps = 0.0
-            return
-        }
-        
-        val startTime = frameTimes.first()
-        val endTime = frameTimes.last()
-        val timeDifference = endTime - startTime
-        
-        if (timeDifference > 0) {
-            // Calculate FPS based on frame time differences
-            fps = (frameTimes.size - 1) * 1_000_000_000.0 / timeDifference
-            
-            // Clamp FPS to reasonable values
-            fps = fps.coerceIn(0.0, 240.0)
         }
     }
 
     private fun updateFPSDisplay() {
-        handler.post {
-            val fpsText = "FPS: ${fpsFormat.format(fps)}"
-            fpsTextView.text = fpsText
-            
-            // Change color based on FPS
-            val color = when {
-                fps >= 55 -> Color.GREEN
-                fps >= 30 -> Color.YELLOW
-                else -> Color.RED
+        try {
+            handler.post {
+                val fpsText = "FPS: ${fpsFormat.format(fps)}"
+                fpsTextView.text = fpsText
+                val color = when {
+                    fps >= 55 -> Color.GREEN
+                    fps >= 30 -> Color.YELLOW
+                    fps > 0 -> Color.RED
+                    else -> Color.GRAY
+                }
+                fpsTextView.setTextColor(color)
             }
-            fpsTextView.setTextColor(color)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error updating FPS display", e)
         }
+    }
+    
+    override fun onDetachedFromWindow() {
+        Log.d(TAG, "View detached from window")
+        stopFPSMonitoring()
+        super.onDetachedFromWindow()
     }
 }
