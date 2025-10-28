@@ -1,0 +1,29 @@
+name: Tag v1.0.0 from known good commit
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: "Commit SHA to tag"
+        required: true
+        default: "307487f48426dd18e1dce3a2e2accec81756c7d8"
+      tag:
+        description: "Tag name"
+        required: true
+        default: "v1.0.0"
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create tag
+        uses: actions/github-script@v7
+        with:
+            script: |
+              const commit = core.getInput('commit');
+              const tag = core.getInput('tag');
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/tags/${tag}`,
+                sha: commit
+              });
