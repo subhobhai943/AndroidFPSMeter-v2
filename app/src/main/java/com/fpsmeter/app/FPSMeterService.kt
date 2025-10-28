@@ -6,11 +6,13 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat
 import android.util.Log
 import android.widget.Toast
 import android.view.Gravity
@@ -46,8 +48,17 @@ class FPSMeterService : Service() {
         
         try {
             val notification = createNotification()
-            startForeground(NOTIFICATION_ID, notification)
-            Log.d(TAG, "Foreground service started with notification")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                ServiceCompat.startForeground(
+                    this,
+                    NOTIFICATION_ID,
+                    notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
+                )
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
+            Log.d(TAG, "Foreground service started with notification and type SHORT_SERVICE")
             
             showOverlay()
             
