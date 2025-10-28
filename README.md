@@ -1,76 +1,55 @@
 # Android FPS Meter
 
-A real-time FPS (Frames Per Second) monitoring tool for Android devices that displays frame rate information as an overlay on top of other applications, including games like BGMI, PUBG Mobile, and other graphics-intensive apps.
+Android FPS Meter overlays the real-time frame rate (FPS) on any Android application, including games like BGMI and PUBG. It’s open source, requires no root, and works on Android 5.0+.
+
+---
 
 ## Features
 
-- **Real-time FPS Monitoring**: Uses Android's Choreographer API for accurate frame rate measurement
-- **System Overlay**: Displays FPS information over any running application
-- **Color-coded Display**: Green (>55 FPS), Yellow (30-55 FPS), Red (<30 FPS)
-- **Lightweight**: Minimal impact on device performance
-- **No Root Required**: Works on non-rooted devices with proper permissions
+- Real-time FPS overlay (system and gaming apps)
+- Works without root
+- Color-coded: **Green** (≥55 FPS), **Yellow** (30–54 FPS), **Red** (<30 FPS)
+- Minimal battery/CPU impact
+- Easy permissions flow
+- Open source (MIT License)
 
-## Technical Implementation
+---
 
-### Core Components
+## Quick Links
 
-1. **FPSOverlayView**: Custom view that uses Choreographer.FrameCallback to monitor frame rendering
-2. **FPSMeterService**: Foreground service that manages the overlay window
-3. **PermissionHelper**: Handles system overlay permission requests
-4. **MainActivity**: Simple UI for controlling the FPS meter
+- [Installation Guide (PDF)](docs/Installation-Guide.pdf)
+- [API Documentation](API_DOCUMENTATION.md)
+- [Troubleshooting](TROUBLESHOOTING.md)
+- [Developer Guide](DEVELOPMENT.md)
 
-### How it Works
+---
 
-The app uses Android's `Choreographer` class to register frame callbacks and calculate real-time FPS:
+## Visuals & Architecture
 
-```kotlin
-override fun doFrame(frameTimeNanos: Long) {
-    // Calculate FPS based on frame timing
-    // Update overlay display
-    choreographer.postFrameCallback(this)
-}
-```
+![App Main Interface](docs/assets/app_interface.png)
 
-### Permissions Required
+![Overlay in Game](docs/assets/fps_overlay.png)
 
-- `SYSTEM_ALERT_WINDOW`: For displaying overlay over other apps
-- `FOREGROUND_SERVICE`: For running the monitoring service
-- `POST_NOTIFICATIONS`: For service notifications (Android 13+)
+![Overlay Permission Screen](docs/assets/permissions.png)
 
-## Installation
+![FPS Meter Workflow](docs/assets/fps_workflow.png)
 
-1. Enable "Developer Options" on your Android device
-2. Install the APK
-3. Grant "Display over other apps" permission when prompted
-4. Start the FPS monitoring service
+![Architecture Diagram](docs/assets/architecture_diagram.png)
 
-## Usage
+---
 
-1. Open the FPS Meter app
-2. Tap "Start FPS Meter" to begin monitoring
-3. The FPS overlay will appear on your screen
-4. Open any game or app to monitor its real-time FPS
-5. Return to the app and tap "Stop FPS Meter" to disable
+## Documentation Site
 
-## Compatibility
+Check the [lightweight documentation site](docs-site/) for a guided tour of features, API, and troubleshooting.
 
-- **Minimum SDK**: Android 5.0 (API level 21)
-- **Target SDK**: Android 14 (API level 34)
-- **Architecture**: ARM64, ARM32, x86_64
+---
 
-## Technical Notes
+## How to Build
 
-- Uses `Choreographer.FrameCallback` for precise frame timing
-- Implements sliding window FPS calculation for accuracy
-- Optimized to minimize performance impact
-- Supports various screen resolutions and orientations
+Instructions are in [INSTALLATION.md](INSTALLATION.md) and [DEVELOPMENT.md](DEVELOPMENT.md). For a step-by-step, use the installation PDF above.
 
-## Building from Source
-
-1. Clone the repository
-2. Open in Android Studio
-3. Build and run on your device
+---
 
 ## License
 
-This project is open source and available under the MIT License.
+[MIT](LICENSE)
