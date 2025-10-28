@@ -73,7 +73,7 @@ class FPSMeterService : Service() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!android.provider.Settings.canDrawOverlays(this)) {
-                    Log.error(TAG, "Overlay permission not granted")
+                    Log.e(TAG, "Overlay permission not granted")
                     showToast("Overlay permission not granted")
                     stopSelf()
                     return
