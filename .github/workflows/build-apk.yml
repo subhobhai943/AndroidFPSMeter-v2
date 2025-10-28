@@ -27,6 +27,26 @@ jobs:
       - name: Generate Gradle Wrapper
         run: gradle wrapper --gradle-version=8.5
 
+      - name: Create default launcher icons
+        run: |
+          # Create mipmap directories
+          mkdir -p app/src/main/res/mipmap-mdpi
+          mkdir -p app/src/main/res/mipmap-hdpi
+          mkdir -p app/src/main/res/mipmap-xhdpi
+          mkdir -p app/src/main/res/mipmap-xxhdpi
+          mkdir -p app/src/main/res/mipmap-xxxhdpi
+          
+          # Install ImageMagick to create icons
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+          
+          # Create a simple green circle icon for FPS Meter
+          convert -size 48x48 xc:transparent -fill "#4CAF50" -draw "circle 24,24 24,4" -fill white -pointsize 14 -gravity center -annotate +0+0 "FPS" app/src/main/res/mipmap-mdpi/ic_launcher.png
+          convert -size 72x72 xc:transparent -fill "#4CAF50" -draw "circle 36,36 36,6" -fill white -pointsize 20 -gravity center -annotate +0+0 "FPS" app/src/main/res/mipmap-hdpi/ic_launcher.png
+          convert -size 96x96 xc:transparent -fill "#4CAF50" -draw "circle 48,48 48,8" -fill white -pointsize 28 -gravity center -annotate +0+0 "FPS" app/src/main/res/mipmap-xhdpi/ic_launcher.png
+          convert -size 144x144 xc:transparent -fill "#4CAF50" -draw "circle 72,72 72,12" -fill white -pointsize 42 -gravity center -annotate +0+0 "FPS" app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+          convert -size 192x192 xc:transparent -fill "#4CAF50" -draw "circle 96,96 96,16" -fill white -pointsize 56 -gravity center -annotate +0+0 "FPS" app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
